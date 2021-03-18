@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <limits>
 #include "List.h"
 
 template <typename Item>
@@ -8,11 +9,11 @@ class Iterator {
 public:
     virtual void First() = 0;
     virtual void Next() = 0;
-    virtual Item& CurrentItem() const = 0;
+    virtual Item CurrentItem() const = 0;
     virtual bool IsDone() const = 0;
 
 protected:
-    Iterator();
+    Iterator() = default;
 
 };
 
@@ -24,7 +25,7 @@ public:
 
     virtual void First() override;
     virtual void Next() override;
-    virtual Item& CurrentItem() const override;
+    virtual Item CurrentItem() const override;
     virtual bool IsDone() const override;
 
 private:
@@ -41,7 +42,7 @@ public:
 
     virtual void First() override;
     virtual void Next() override;
-    virtual Item& CurrentItem() const override;
+    virtual Item CurrentItem() const override;
     virtual bool IsDone() const override;
 
 private:
@@ -66,13 +67,14 @@ void ListIterator<Item>::Next() {
 }
 
 template <typename Item>
-Item& ListIterator<Item>::CurrentItem() const {
+Item ListIterator<Item>::CurrentItem() const {
 
     if (IsDone()) {
         throw std::runtime_error("Iterator out of bounds");
     }
 
-    _list->Get(_current);
+    return _list->Get(_current);
+
 }
 
 template <typename Item>
@@ -96,16 +98,16 @@ void ReverseListIterator<Item>::Next() {
 }
 
 template <typename Item>
-Item& ReverseListIterator<Item>::CurrentItem() const {
+Item ReverseListIterator<Item>::CurrentItem() const {
 
     if (IsDone()) {
         throw std::runtime_error("Iterator out of bounds");
     }
 
-    _list->Get(_current);
+    return _list->Get(_current);
 }
 
 template <typename Item>
 bool ReverseListIterator<Item>::IsDone() const {
-    return _current < 0;
+    return _current == std::numeric_limits<uint64_t>::max();
 }
