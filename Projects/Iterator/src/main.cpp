@@ -1,6 +1,7 @@
 #include "Employee.h"
 #include "List.h"
 #include "SkipList.h"
+#include "IteratorPtr.h"
 
 
 void PrintEmployees(Iterator<Employee*>& i) {
@@ -40,7 +41,8 @@ int main()
 
     //Interface-oriented programming
     {
-        Iterator<Employee*>* iter = aEmployeeList->CreateIterator();
+        //Iterator<Employee*>* iter = aEmployeeList->CreateIterator();
+        IteratorPtr iter(aEmployeeList->CreateIterator());
         PrintEmployees(*iter);
         //iter = aEmployeeList->CreateReverseIterator();
         //PrintEmployees(*iter);
@@ -53,7 +55,8 @@ int main()
 
     //Interface-oriented programming
     {
-        Iterator<Employee*>* iter = aEmployeeList->CreateIterator();
+        //Iterator<Employee*>* iter = aEmployeeList->CreateIterator();
+        IteratorPtr iter(aEmployeeList->CreateIterator());
         PrintEmployees(*iter);
     }
 
