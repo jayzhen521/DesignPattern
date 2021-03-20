@@ -1,6 +1,8 @@
 #include "List.h"
 #include "Iterator.h"
 
+#include "SkipList.h"
+
 #include "Employee.h"
 
 void PrintEmployees(Iterator<Employee*>& i) {
@@ -32,10 +34,26 @@ int main()
     PrintEmployees(forward);
     PrintEmployees(backward);
 
+    SkipList<Employee*> *skipEmployees = new SkipList<Employee*>(0);
+    skipEmployees->add(e1);
+    skipEmployees->add(e2);
+    skipEmployees->add(e3);
+    skipEmployees->add(e4);
+
+    std::cout << "---------------------------------------" << std::endl;
+
+    //Create corresponding Iterator according to concrete list type
+    SkipListIterator<Employee*> skipforword(skipEmployees);
+    PrintEmployees(skipforword);
+
+
     delete e1;
     delete e2;
     delete e3;
     delete e4;
+
+    delete employees;
+    delete skipEmployees;
 
 
 }

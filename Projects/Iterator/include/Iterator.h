@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <limits>
 #include "List.h"
+#include "SkipList.h"
 
 template <typename Item>
 class Iterator {
@@ -70,7 +71,7 @@ template <typename Item>
 Item ListIterator<Item>::CurrentItem() const {
 
     if (IsDone()) {
-        throw std::runtime_error("Iterator out of bounds");
+        throw std::runtime_error(ITERATOR_OUT_OF_BOUNDS);
     }
 
     return _list->Get(_current);
@@ -101,7 +102,7 @@ template <typename Item>
 Item ReverseListIterator<Item>::CurrentItem() const {
 
     if (IsDone()) {
-        throw std::runtime_error("Iterator out of bounds");
+        throw std::runtime_error(ITERATOR_OUT_OF_BOUNDS);
     }
 
     return _list->Get(_current);
@@ -111,3 +112,50 @@ template <typename Item>
 bool ReverseListIterator<Item>::IsDone() const {
     return _current == std::numeric_limits<uint64_t>::max();
 }
+
+template <typename Item>
+class SkipListIterator : public Iterator<Item>
+{
+public:
+    SkipListIterator(SkipList<Item> *aSkipList);
+
+    virtual void First() override;
+    virtual void Next() override;
+    virtual Item CurrentItem() const override;
+    virtual bool IsDone() const override;
+
+private:
+    SkipList<Item>* _list;
+    uint64_t _current;
+
+};
+
+template <typename Item>
+SkipListIterator<Item>::SkipListIterator(SkipList<Item>* aSkipList)
+    :_list(aSkipList)
+{}
+
+template <typename Item>
+void SkipListIterator<Item>::First() {
+    _current = 0;
+}
+
+template <typename Item>
+void SkipListIterator<Item>::Next() {
+    _current += 2;
+}
+
+template <typename Item>
+Item SkipListIterator<Item>::CurrentItem() const {
+    if (IsDone()) {
+        throw std::runtime_error(ITERATOR_OUT_OF_BOUNDS);
+    }
+
+    return _list->Get(_current);
+}
+
+template <typename Item>
+bool SkipListIterator<Item>::IsDone() const {
+    return _current >= _list->Count();
+}
+
