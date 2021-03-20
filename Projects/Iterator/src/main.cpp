@@ -1,9 +1,7 @@
+#include "Employee.h"
 #include "List.h"
-#include "Iterator.h"
-
 #include "SkipList.h"
 
-#include "Employee.h"
 
 void PrintEmployees(Iterator<Employee*>& i) {
     for (i.First(); !i.IsDone(); i.Next()) {
@@ -14,38 +12,50 @@ void PrintEmployees(Iterator<Employee*>& i) {
 int main()
 {
     //employees refered to a employee list created by Client.
-    List<Employee*>* employees = new List<Employee*>(0);
-
     auto e1 = new Employee(1, "jay");
     auto e2 = new Employee(2, "zhen");
     auto e3 = new Employee(3, "xu");
     auto e4 = new Employee(4, "feng");
+
+    //Client know which kind of List should be created, and which kind of Iterator should be created.
+    //Thanks to the list the and iterator are coupled, using AbstratList, Client don't take care about 
+    //choosing corresponding Iterator.
+    List<Employee*>* employees = new List<Employee*>(0);
+    SkipList<Employee*>* skipEmployees = new SkipList<Employee*>(0);
 
     employees->add(e1);
     employees->add(e2);
     employees->add(e3);
     employees->add(e4);
 
-    //...
-
-    ListIterator<Employee*> forward(employees);
-    ReverseListIterator<Employee*> backward(employees);
-
-    PrintEmployees(forward);
-    PrintEmployees(backward);
-
-    SkipList<Employee*> *skipEmployees = new SkipList<Employee*>(0);
     skipEmployees->add(e1);
     skipEmployees->add(e2);
     skipEmployees->add(e3);
     skipEmployees->add(e4);
 
+    List<Employee*>* aEmployeeList = nullptr;
+
+    //simulate:not need to know the type of skipEmployees
+    aEmployeeList = employees;
+
+    //Interface-oriented programming
+    {
+        Iterator<Employee*>* iter = aEmployeeList->CreateIterator();
+        PrintEmployees(*iter);
+        //iter = aEmployeeList->CreateReverseIterator();
+        //PrintEmployees(*iter);
+    }
+
     std::cout << "---------------------------------------" << std::endl;
 
-    //Create corresponding Iterator according to concrete list type
-    SkipListIterator<Employee*> skipforword(skipEmployees);
-    PrintEmployees(skipforword);
+    //simulate:not need to know the type of skipEmployees
+    aEmployeeList = skipEmployees;
 
+    //Interface-oriented programming
+    {
+        Iterator<Employee*>* iter = aEmployeeList->CreateIterator();
+        PrintEmployees(*iter);
+    }
 
     delete e1;
     delete e2;

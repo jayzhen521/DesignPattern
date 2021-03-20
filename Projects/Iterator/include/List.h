@@ -4,13 +4,20 @@
 #include <stdexcept>
 
 #include "Config.h"
+#include "AbstractList.h"
+
+#include "ListIterator.h"
+#include "ReverseListIterator.h"
 
 template <typename Item>
-class List {
+class List : AbstractList<Item>{
 
 public:
     List(uint64_t size = DEFAULT_LIST_CAPACITY);
     virtual ~List();
+
+    virtual Iterator<Item>* CreateIterator() const override;
+    virtual Iterator<Item>* CreateReverseIterator() const override;
 
     uint64_t Count() const;
     Item Get(uint64_t index) const;
@@ -50,4 +57,16 @@ void List<Item>::add(Item item)
 template <typename Item>
 List<Item>::~List() {
     
+}
+
+template<typename Item>
+inline Iterator<Item>* List<Item>::CreateIterator() const
+{
+    return new ListIterator<Item>(this);
+}
+
+template<typename Item>
+inline Iterator<Item>* List<Item>::CreateReverseIterator() const
+{
+    return new ReverseListIterator<Item>(this);
 }
